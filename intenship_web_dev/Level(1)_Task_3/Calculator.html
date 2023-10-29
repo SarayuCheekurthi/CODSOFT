@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #calculator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            width: 300px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 2px 2px 5px #888888;
+            background-color: rgb(240, 128, 9);
+        }
+
+        #display {
+            font-size: 24px;
+            text-align: right;
+            padding: 10px;
+            background-color: #f0f0f0;
+            margin-bottom: 5px;
+        }
+
+        #buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 5px;
+        }
+
+        button {
+            font-size: 18px;
+            padding: 10px;
+            cursor: pointer;
+            color: white;
+            border: 1px solid #ccc;
+            background-color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <div id="calculator">
+        <div id="display">0</div>
+        <div id="buttons">
+            <button id="clear">C</button>
+            <button id="backspace">&#9003;</button>
+            <button id="divide">/</button>
+            <button id="multiply">*</button>
+            <button id="7">7</button>
+            <button id="8">8</button>
+            <button id="9">9</button>
+            <button id="subtract">-</button>
+            <button id="4">4</button>
+            <button id="5">5</button>
+            <button id="6">6</button>
+            <button id="add">+</button>
+            <button id="1">1</button>
+            <button id="2">2</button>
+            <button id="3">3</button>
+            <button id="decimal">.</button>
+            <button id="equals" style="grid-column: span 2;">=</button>
+            <button id="0">0</button>
+            
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById("display");
+        let currentInput = "";
+        let currentOperator = "";
+        let result = 0;
+        document.getElementById("buttons").addEventListener("click", (event) => {
+            const clickedElement = event.target;
+            const clickedValue = clickedElement.textContent;
+
+            if (!isNaN(clickedValue) || clickedValue === ".") {
+                currentInput += clickedValue;
+                display.textContent = currentInput;
+            } else if (clickedValue === "C") {
+                clear();
+            } else if (clickedValue === "=") {
+                calculate();
+            } else {
+                if (currentOperator !== "") {
+                    calculate();
+                }
+                currentOperator = clickedValue;
+                result = parseFloat(currentInput);
+                currentInput = "";
+            }
+        });
+
+        document.getElementById("backspace").addEventListener("click", () => {
+            currentInput = currentInput.slice(0, -1);
+            display.textContent = currentInput;
+        });
+
+        function clear() {
+            currentInput = "";
+            currentOperator = "";
+            result = 0;
+            display.textContent = "0";
+        }
+
+        function calculate() {
+            const inputNumber = parseFloat(currentInput);
+            switch (currentOperator) {
+                case "+":
+                    result += inputNumber;
+                    break;
+                case "-":
+                    result -= inputNumber;
+                    break;
+                case "*":
+                    result *= inputNumber;
+                    break;
+                case "/":
+                    if (inputNumber === 0) {
+                        display.textContent = "Error";
+                        return;
+                    }
+                    result /= inputNumber;
+                    break;
+            }
+            currentInput = result.toString();
+            display.textContent = currentInput;
+            currentOperator = "";
+        }
+    </script>
+</body>
+</html>
